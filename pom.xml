@@ -5,7 +5,7 @@
   <artifactId>learn-w-me</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Learn with Me Application - A Fantastic tool aims to help people memorizing things</name>
+  <name>Learn with Me Application - A Fantastic tool aims to help people memorize things.</name>
   <url>http://maven.apache.org</url>
 
   <properties>

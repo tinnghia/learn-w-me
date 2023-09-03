@@ -1,1 +1,1 @@
-# Learn with Me Application - A Fantastic tool aims to help people memorizing things
+# Learn with Me Application - A Fantastic tool aims to help people memorize things.
