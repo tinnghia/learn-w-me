@@ -1,0 +1,7 @@
+com/leanwme/core/model/Category.class
+com/leanwme/core/repository/CategoryRepository.class
+com/leanwme/core/LearnApp.class
+com/leanwme/core/controller/CategoryController.class
+com/leanwme/core/model/Chunk.class
+com/leanwme/core/controller/ChunkController.class
+com/leanwme/core/repository/ChunkRepository.class

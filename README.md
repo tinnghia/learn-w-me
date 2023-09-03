@@ -1,1 +1,1 @@
-# learn-w-me
+# Learn with Me Application - A Fantastic tool aims to help people memorizing things
