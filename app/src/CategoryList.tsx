@@ -1,32 +1,35 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { CategoryContext } from "./Context";
 import { CategoryType } from "./models/Category";
+import appConfig from './config/config.json';
+import axios from "axios";
 
-export const CategoryList: FunctionComponent = () => {
+interface CategoryListProps {
+    onChange: (categoryCode: string) => void;
+}
+export const CategoryList: FunctionComponent<CategoryListProps> = ({ onChange }) => {
     const [categoriesData, setCategoriesData] = useState([]);
     const { category, setCategory } = useContext(CategoryContext);
 
     useEffect(() => {
-        const url =
-            "http://localhost:8080/api/categories";
-        fetch(url)
-            .then((response) => response.json())
-            .then((json) => {
-                setCategoriesData(json);
+        const url = `${appConfig.backendUrl}/api/categories`;
+        axios.get(url)
+            .then((response) => {
+                setCategoriesData(response.data);
             });
     }, []);
 
-    function handleClick(event: any, category: string) {
+    const handleClick = (event: any, category: string) => {
         event.preventDefault();
-        console.log("click", event, category);
         setCategory(category);
+        onChange(category);
     }
 
     return (
         <div className="scrollmenu">
             {
-                categoriesData && categoriesData.map((category: CategoryType) =>
-                    <a className="categoryCls" onClick={e => handleClick(e, category.code)} key={category.code}>{category.description}</a>
+                categoriesData && categoriesData.map((categoryItem: CategoryType) =>
+                    <a className={`categoryCls ${categoryItem.code === category ? "active" : ""}`} onClick={e => handleClick(e, categoryItem.code)} key={categoryItem.code}>{categoryItem.description}</a>
                 )
             }
         </div>

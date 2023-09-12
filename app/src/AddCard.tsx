@@ -16,6 +16,7 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { FunctionComponent, useEffect, useState } from "react";
+import appConfig from './config/config.json';
 import { CategoryType } from "./models/Category";
 
 interface DialogProps {
@@ -40,8 +41,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
         category: "clean_code",
     });
     useEffect(() => {
-        const url =
-            "http://localhost:8080/api/categories";
+        const url = `${appConfig.backendUrl}/api/categories`;
         fetch(url)
             .then((response) => response.json())
             .then((json) => {
@@ -55,7 +55,8 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        axios.post("http://localhost:8080/api/chunks", chunk).then((response) => {
+        const url = `${appConfig.backendUrl}/api/chunks`;
+        axios.post(url, chunk).then((response) => {
             console.log(response.status, response.data.token);
             postSubmit(true);
             onClose();

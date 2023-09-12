@@ -75,6 +75,10 @@ div.scrollmenu a {
 div.scrollmenu a:hover {
   background-color: #777;
 }
+div.scrollmenu a.active {
+  background-color: dodgerblue;
+  color: white;
+}
 
 @media screen and (max-width: 500px) {
   .header a {

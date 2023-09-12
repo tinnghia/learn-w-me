@@ -1,25 +1,30 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import "./CardsStyles.css";
 
+import axios from "axios";
 import { Card } from "./Card";
 import { CategoryContext } from "./Context";
 import { Chunk } from "./models/Chunk";
+import appConfig from './config/config.json';
 
 export const Cards: FunctionComponent = () => {
-  const [flashcarddata, setFlashcarddata] = useState([]);
+  const [cards, setCards] = useState<any[]>([]);
   const { category, setCategory } = useContext(CategoryContext);
   useEffect(() => {
-    const url = `http://localhost:8080/api/chunks?category=${category}`;
-    fetch(url)
-      .then((response) => response.json())
-      .then((json) => {
-        setFlashcarddata(json);
+    const url = `${appConfig.backendUrl}/api/chunks?category=${category}`;
+    axios.get(url)
+      .then((response) => {
+        if (response.data) {
+          let cards = response.data.map((chunk: Chunk) => {
+            return <Card id={chunk.id} type={chunk.type} title={chunk.title} content={chunk.content} key={chunk.id} category={chunk.category} />;
+          });
+          setCards(cards);
+        } else
+          setCards([]);
+
       });
   }, [category]);
 
-  const cards = flashcarddata.map((chunk: Chunk) => {
-    return <Card id={chunk.id} type={chunk.type} title={chunk.title} content={chunk.content} key={chunk.id} category={chunk.category} />;
-  });
 
   const loading = <div className="loading">Loading content...</div>;
 
@@ -35,14 +40,21 @@ export const Cards: FunctionComponent = () => {
 
   return (
     <div>
-      {flashcarddata && flashcarddata.length > 0 ? (
+      <div className="icon-bar">
+        <a href="#" className="facebook"><i className="fa fa-facebook"></i></a>
+        <a href="#" className="twitter"><i className="fa fa-twitter"></i></a>
+        <a href="#" className="google"><i className="fa fa-google"></i></a>
+        <a href="#" className="linkedin"><i className="fa fa-linkedin"></i></a>
+        <a href="#" className="youtube"><i className="fa fa-github"></i></a>
+      </div>
+      {cards && cards.length > 0 ? (
         <div className="cardNumber">
-          {current + 1} / {flashcarddata.length}
+          {current + 1} / {cards.length}
         </div>
       ) : (
         ""
       )}
-      {flashcarddata && flashcarddata.length > 0 ? cards[current] : loading}
+      {cards && cards.length > 0 ? cards[current] : loading}
       <div className="nav">
         <button className="circleCls"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
           <path d="M403.8 34.4c12-5 25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V160H352c-10.1 0-19.6 4.7-25.6 12.8L284 229.3 244 176l31.2-41.6C293.3 110.2 321.8 96 352 96h32V64c0-12.9 7.8-24.6 19.8-29.6zM164 282.7L204 336l-31.2 41.6C154.7 401.8 126.2 416 96 416H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96c10.1 0 19.6-4.7 25.6-12.8L164 282.7zm274.6 188c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V416H352c-30.2 0-58.7-14.2-76.8-38.4L121.6 172.8c-6-8.1-15.5-12.8-25.6-12.8H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H96c30.2 0 58.7 14.2 76.8 38.4L326.4 339.2c6 8.1 15.5 12.8 25.6 12.8h32V320c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64z" />
@@ -54,7 +66,7 @@ export const Cards: FunctionComponent = () => {
             Previous card
           </button>
         )}
-        {current < flashcarddata.length - 1 ? (
+        {current < cards.length - 1 ? (
           <button onClick={nextCard}>Next card</button>
         ) : (
           <button className="disabled" disabled>

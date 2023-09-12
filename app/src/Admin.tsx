@@ -11,6 +11,7 @@ import axios from "axios";
 import { FunctionComponent, useEffect, useState } from "react";
 import { AddCard } from "./AddCard";
 import "./AdminStyles.css";
+import appConfig from './config/config.json';
 import { Chunk } from "./models/Chunk";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -22,16 +23,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
 
 export const Admin: FunctionComponent = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -45,8 +36,7 @@ export const Admin: FunctionComponent = () => {
   }, []);
 
   const loadChunks = () => {
-    const url =
-      "http://localhost:8080/api/chunks";
+    const url = `${appConfig.backendUrl}/api/chunks`;
     axios.get(url).then((response) => {
       setChunksData(response.data);
     });
