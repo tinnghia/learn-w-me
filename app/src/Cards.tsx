@@ -2,8 +2,8 @@ import { FunctionComponent, useContext, useEffect, useState } from "react";
 import "./CardsStyles.css";
 
 import { Card } from "./Card";
-import { Chunk } from "./models/Chunk";
 import { CategoryContext } from "./Context";
+import { Chunk } from "./models/Chunk";
 
 export const Cards: FunctionComponent = () => {
   const [flashcarddata, setFlashcarddata] = useState([]);
@@ -18,7 +18,7 @@ export const Cards: FunctionComponent = () => {
   }, [category]);
 
   const cards = flashcarddata.map((chunk: Chunk) => {
-    return <Card id={chunk.id} type={chunk.type} title={chunk.title} content={chunk.content} key={chunk.id} />;
+    return <Card id={chunk.id} type={chunk.type} title={chunk.title} content={chunk.content} key={chunk.id} category={chunk.category} />;
   });
 
   const loading = <div className="loading">Loading content...</div>;

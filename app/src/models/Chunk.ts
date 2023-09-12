@@ -3,4 +3,5 @@ export interface Chunk {
     type: number;
     title: string;
     content: string;
+    category: string;
 }

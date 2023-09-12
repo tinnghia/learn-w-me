@@ -1,7 +1,8 @@
+import { Typography } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { Chunk } from "./models/Chunk";
 
-export const Card: FunctionComponent<Chunk> = ({ id, type, title, content }) => {
+export const Card: FunctionComponent<Chunk> = ({ id, type, title, content, category }) => {
     const [side, setSide] = useState(false);
 
     function handleClick() {
@@ -18,12 +19,12 @@ export const Card: FunctionComponent<Chunk> = ({ id, type, title, content }) => 
                 <a href="#" className="youtube"><i className="fa fa-github"></i></a>
             </div>
             <div className={`card ${side ? "side" : ""}`} onClick={handleClick}>
-                <small>
-                    {title}
-                </small>
-                {/* {side ? card.fields.side1 : card.fields.side2} */}
                 <div className="front">{title}</div>
-                <div className="back">{content}</div>
+                <div className="back">
+                    <Typography style={{ whiteSpace: "pre-line", fontSize: "1.2rem" }}>
+                        {content}
+                    </Typography>
+                </div>
             </div>
         </div>
     );

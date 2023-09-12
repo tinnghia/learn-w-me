@@ -35,6 +35,11 @@
   backface-visibility: hidden;
 }
 
+.card .back {
+  padding-top: 5rem;
+  height: 100%;
+}
+
 .card .front {
   transform: rotateY(0deg);
 }

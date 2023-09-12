@@ -1,27 +1,30 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Admin } from "./Admin";
 import "./AppStyles.css";
-
-import { Cards } from "./Cards";
-import { CategoryList } from "./CategoryList";
 import { ContextProvider } from "./Context";
+import Home from "./Home";
 
 export default function App() {
   return (
-    <ContextProvider>
-      <>
-        <div className="header">
-          <a href="#default" className="logo">
-            <img alt="Envato Market" className="header_logo" src="leanwithme.png" />
-          </a>
-          <div className="header-right">
-            <a href="#about">Admin</a>
-            <a href="#about">Sign In</a>
+    <BrowserRouter>
+
+      <ContextProvider>
+        <>
+          <div className="header">
+            <a href="/" className="logo">
+              <img alt="Envato Market" className="header_logo" src="leanwithme.png" />
+            </a>
+            <div className="header-right">
+              <a href="/admin">Admin</a>
+              <a href="/signin">Sign In</a>
+            </div>
           </div>
-        </div>
-        <CategoryList />
-        <div>
-          <Cards />
-        </div>
-      </>
-    </ContextProvider>
+          <Routes>
+            <Route path="/" Component={Home}></Route>
+            <Route path="/admin" Component={Admin}></Route>
+          </Routes>
+        </>
+      </ContextProvider>
+    </BrowserRouter>
   );
 }

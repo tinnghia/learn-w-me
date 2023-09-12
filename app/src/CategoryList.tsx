@@ -1,11 +1,7 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { CategoryContext } from "./Context";
+import { CategoryType } from "./models/Category";
 
-interface CategoryType {
-    id: string;
-    code: string;
-    description: string;
-}
 export const CategoryList: FunctionComponent = () => {
     const [categoriesData, setCategoriesData] = useState([]);
     const { category, setCategory } = useContext(CategoryContext);
