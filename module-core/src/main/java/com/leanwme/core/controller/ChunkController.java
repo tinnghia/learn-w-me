@@ -29,12 +29,14 @@ public class ChunkController {
     ChunkRepository chunkRepository;
 
     @GetMapping("/chunks")
-    public ResponseEntity<List<Chunk>> getAllChunks(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<Chunk>> getAllChunks(@RequestParam(required = false) String category) {
         try {
             List<Chunk> chunks = new ArrayList<>();
 
-            if (title == null)
+            if (category == null)
                 chunkRepository.findAll().forEach(chunks::add);
+            else
+                chunkRepository.findAll().stream().filter(chunk -> category.equals(chunk.getCategory())).forEach(chunks::add);
             if (chunks.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
