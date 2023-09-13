@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Admin } from "./Admin";
 import "./AppStyles.css";
-import { ContextProvider } from "./Context";
+import { ChunkProvider, ContextProvider } from "./Context";
 import Home from "./Home";
 
 export default function App() {
@@ -9,6 +9,7 @@ export default function App() {
     <BrowserRouter>
 
       <ContextProvider>
+        <ChunkProvider>
         <>
           <div className="header">
             <a href="/" className="logo">
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/admin" Component={Admin}></Route>
           </Routes>
         </>
+        </ChunkProvider>
       </ContextProvider>
     </BrowserRouter>
   );

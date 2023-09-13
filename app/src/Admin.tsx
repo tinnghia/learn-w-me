@@ -8,9 +8,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import axios from "axios";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { AddCard } from "./AddCard";
 import "./AdminStyles.css";
+import { ChunkContext } from './Context';
+import { EditCard } from './EditCard';
+import { ModalDialog } from './ModalDialog';
 import appConfig from './config/config.json';
 import { Chunk } from "./models/Chunk";
 
@@ -26,9 +29,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export const Admin: FunctionComponent = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [chunksData, setChunksData] = useState([]);
+  const { selectedChunk, setSelectedChunk } = useContext(ChunkContext);
 
 
   useEffect(() => {
@@ -64,6 +70,41 @@ export const Admin: FunctionComponent = () => {
     }
   };
 
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+  };
+
+  const onPostChunkUpdated = (success: boolean) => {
+    if (success) {
+      loadChunks();
+    }
+  };
+
+  const handleEditRow = (chunk: Chunk) => {
+    setSelectedChunk(chunk);
+    setOpenEditDialog(true);
+  }
+
+  const handleDeleteRow = (chunk: Chunk) => {
+    setSelectedChunk(chunk);
+    setOpenDeleteDialog(true);
+  }
+
+  const handleDeleteChunk = () => {
+    const url = `${appConfig.backendUrl}/api/chunks/${selectedChunk.id}`;
+    axios.delete(url).then((response) => {
+      console.log(response.status, response.data.token);
+      handleCloseDeleteDialog();
+      loadChunks();
+    }).catch((error) => {
+      console.log(error);
+      handleCloseDeleteDialog();
+    });
+  }
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
   return (
     <>
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
@@ -94,8 +135,8 @@ export const Admin: FunctionComponent = () => {
                 </TableCell>
                 <TableCell align="right">
                   <ButtonGroup variant="text" aria-label="text button group">
-                    <Button id="edit">Edit</Button>
-                    <Button id="delete">Delete</Button>
+                    <Button id="edit" onClick={() => handleEditRow(row)}>Edit</Button>
+                    <Button id="delete" onClick={() => handleDeleteRow(row)} >Delete</Button>
                   </ButtonGroup>
                 </TableCell>
               </TableRow>
@@ -123,6 +164,8 @@ export const Admin: FunctionComponent = () => {
         </Table>
       </TableContainer>
       <AddCard open={openDialog} onClose={handleCloseAddDialog} postSubmit={onPostChunkCreated}></AddCard>
+      <EditCard open={openEditDialog} onClose={handleCloseEditDialog} postSubmit={onPostChunkUpdated} data={selectedChunk}></EditCard>
+      <ModalDialog open={openDeleteDialog} title='Delete Chunk' message='Are you sure you want to delete?' onYes={handleDeleteChunk} onClose={handleCloseDeleteDialog}></ModalDialog>
     </>
   )
 }

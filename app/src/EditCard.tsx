@@ -15,11 +15,14 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useState } from "react";
+import { ChunkContext } from './Context';
 import appConfig from './config/config.json';
 import { CategoryType } from "./models/Category";
+import { Chunk } from './models/Chunk';
 
 interface DialogProps {
+    data: Chunk;
     open: boolean;
     onClose: () => void;
     postSubmit: (success: boolean) => void;
@@ -33,13 +36,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
         padding: theme.spacing(1)
     },
 }));
-export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose, postSubmit }) => {
+export const EditCard: FunctionComponent<DialogProps> = ({ data, open = false, onClose, postSubmit }) => {
     const [categoriesData, setCategoriesData] = useState([]);
-    const [chunk, setChunk] = useState({
-        title: "",
-        content: "",
-        category: "clean_code",
-    });
+    const { selectedChunk, setSelectedChunk } = useContext(ChunkContext);
     useEffect(() => {
         const url = `${appConfig.backendUrl}/api/categories`;
         fetch(url)
@@ -55,8 +54,8 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        const url = `${appConfig.backendUrl}/api/chunks`;
-        axios.post(url, chunk).then((response) => {
+        const url = `${appConfig.backendUrl}/api/chunks/${selectedChunk.id}`;
+        axios.put(url, selectedChunk).then((response) => {
             console.log(response.status, response.data.token);
             postSubmit(true);
             onClose();
@@ -71,8 +70,8 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
     };
     const handleTextChange = (event: any) => {
         const value = event.target.value;
-        setChunk({
-            ...chunk,
+        setSelectedChunk({
+            ...selectedChunk,
             [event.target.name]: value
         });
     };
@@ -93,7 +92,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
             }}
         >
             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                Add Chunk
+                Update Chunk
             </DialogTitle>
             <IconButton
                 aria-label="close"
@@ -129,7 +128,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
                                 name="title"
                                 autoComplete="title"
                                 autoFocus
-                                value={chunk.title}
+                                value={selectedChunk.title}
                                 onChange={handleTextChange}
                             />
                             <TextareaAutosize style={{ width: "850px", border: "1px solid lightgray" }} minRows={20} maxRows={80} minLength={40}
@@ -138,7 +137,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
                                 placeholder="Content"
                                 id="content"
                                 autoComplete="content"
-                                value={chunk.content}
+                                value={selectedChunk.content}
                                 onChange={handleTextChange}
                             />
                             <FormControl fullWidth>
@@ -146,7 +145,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={chunk.category}
+                                    value={selectedChunk.category}
                                     label="Category"
                                     onChange={handleChange}
                                 >
@@ -164,7 +163,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleSubmit}>
-                    Add
+                    Update
                 </Button>
             </DialogActions>
         </BootstrapDialog>
