@@ -10,10 +10,12 @@ import appConfig from './config/config.json';
 export const Cards: FunctionComponent = () => {
   const [cards, setCards] = useState<any[]>([]);
   const { category, setCategory } = useContext(CategoryContext);
+  const [current, setCurrent] = useState(0);
   useEffect(() => {
     const url = `${appConfig.backendUrl}/api/chunks?category=${category}`;
     axios.get(url)
       .then((response) => {
+        setCurrent(0);
         if (response.data) {
           let cards = response.data.map((chunk: Chunk) => {
             return <Card id={chunk.id} type={chunk.type} title={chunk.title} content={chunk.content} key={chunk.id} category={chunk.category} />;
@@ -29,7 +31,6 @@ export const Cards: FunctionComponent = () => {
   const loading = <div className="loading">Loading content...</div>;
 
   // navigation in cards
-  const [current, setCurrent] = useState(0);
   function previousCard() {
     setCurrent(current - 1);
   }

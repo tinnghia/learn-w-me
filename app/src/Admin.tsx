@@ -1,5 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Button, ButtonGroup, TableFooter, TablePagination, Typography, styled } from "@mui/material";
+import { Box, Button, ButtonGroup, TableFooter, TablePagination, Typography, styled } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,12 +8,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import axios from "axios";
-import { FunctionComponent, useContext, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useMemo, useState } from "react";
 import { AddCard } from "./AddCard";
 import "./AdminStyles.css";
 import { ChunkContext } from './Context';
 import { EditCard } from './EditCard';
 import { ModalDialog } from './ModalDialog';
+import { SearchBar } from './SearchBar';
 import appConfig from './config/config.json';
 import { Chunk } from "./models/Chunk";
 
@@ -35,7 +36,16 @@ export const Admin: FunctionComponent = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [chunksData, setChunksData] = useState([]);
   const { selectedChunk, setSelectedChunk } = useContext(ChunkContext);
+  const [filteredChunks, setFilteredChunks] = useState([]);
 
+  const visibleChunks = useMemo(
+    () =>
+      filteredChunks.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      ),
+    [filteredChunks, page, rowsPerPage],
+  );
 
   useEffect(() => {
     loadChunks();
@@ -45,6 +55,7 @@ export const Admin: FunctionComponent = () => {
     const url = `${appConfig.backendUrl}/api/chunks`;
     axios.get(url).then((response) => {
       setChunksData(response.data);
+      setFilteredChunks(response.data);
     });
   }
 
@@ -105,11 +116,21 @@ export const Admin: FunctionComponent = () => {
     setOpenDeleteDialog(false);
   };
 
+  const requestSearch = (searchText: string) => {
+    const localFilteredChunks = chunksData.filter((row: Chunk) => {
+      return row.content.toLowerCase().includes(searchText.toLowerCase());
+    });
+    setFilteredChunks(localFilteredChunks);
+  }
+
   return (
     <>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add Chunk
-      </Button>
+      <Box display="flex" flexDirection="row">
+        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+          Add Chunk
+        </Button>
+        <SearchBar onChange={(text) => requestSearch(text)}></SearchBar>
+      </Box>
       <TableContainer component={Paper}>
         <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -121,7 +142,7 @@ export const Admin: FunctionComponent = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {chunksData.map((row: Chunk, idx) => (
+            {visibleChunks.map((row: Chunk, idx) => (
               <TableRow
                 key={idx}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

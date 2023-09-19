@@ -66,7 +66,7 @@ export const EditCard: FunctionComponent<DialogProps> = ({ data, open = false, o
     }
 
     const handleChange = (event: SelectChangeEvent) => {
-        console.log('select', event);
+        handleTextChange(event);
     };
     const handleTextChange = (event: any) => {
         const value = event.target.value;
@@ -141,10 +141,11 @@ export const EditCard: FunctionComponent<DialogProps> = ({ data, open = false, o
                                 onChange={handleTextChange}
                             />
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label" >Category</InputLabel>
+                                <InputLabel id="category-input-label" >Category</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
+                                    labelId="category-label"
+                                    id="category"
+                                    name='category'
                                     value={selectedChunk.category}
                                     label="Category"
                                     onChange={handleChange}

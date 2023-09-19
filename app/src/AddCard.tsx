@@ -67,7 +67,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
     }
 
     const handleChange = (event: SelectChangeEvent) => {
-        console.log('select', event);
+        handleTextChange(event);
     };
     const handleTextChange = (event: any) => {
         const value = event.target.value;
@@ -116,7 +116,7 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
                             flexDirection: 'column',
                             alignItems: 'center',
                             width: "100%",
-                            maxWidth: "900px",  // Set your width here
+                            maxWidth: "900px",
                         }}
                     >
                         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -142,10 +142,11 @@ export const AddCard: FunctionComponent<DialogProps> = ({ open = false, onClose,
                                 onChange={handleTextChange}
                             />
                             <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label" >Category</InputLabel>
+                                <InputLabel id="category-input-label" >Category</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
+                                    name="category"
+                                    labelId="category-label"
+                                    id="category"
                                     value={chunk.category}
                                     label="Category"
                                     onChange={handleChange}

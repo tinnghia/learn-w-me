@@ -1,8 +1,8 @@
 .card {
   margin: 10px auto;
   background: var(--grad-one);
-  height: 450px;
-  width: 750px;
+  height: 550px;
+  width: 850px;
   display: flex;
   justify-content: center;
   align-items: center;
