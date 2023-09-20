@@ -52,6 +52,19 @@
   transform: rotateY(180deg);
 }
 
+.split {
+  margin-left: 50px;
+}
+
+.split-editor {
+  margin-right: 10px;
+}
+
+.split-editor-hide {
+  opacity: 0;
+  display: none;
+}
+
 .card small {
   opacity: 0.7;
   font-size: 0.7em;
